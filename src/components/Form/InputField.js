@@ -14,7 +14,7 @@ import React from 'react';
 const Input = (props) => {
 	return (
 		<section className="form-group">
-			<label className="form-label" for={props.label}>
+			<label className="form-label" htmlFor={props.label}>
 				{props.label}
 			</label>
 			<input
