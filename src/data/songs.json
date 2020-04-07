@@ -1,5 +1,8 @@
 {
-	"gkarigpja0p984rup30war": {
-		"songName": "Hello, Goodbye"
-	}
+	"songList": [
+		{
+			"id": "gkarigpja0p984rup30war",
+			"songName": "Hello, Goodbye"
+		}
+	]
 }

@@ -1,7 +1,6 @@
 import React from 'react';
 import Input from './InputField';
 import Button from './Button';
-import songs from 'data/songs.json';
 import crypto from 'crypto';
 
 class FormContainer extends React.Component {
@@ -10,6 +9,9 @@ class FormContainer extends React.Component {
 		this.songNameHandler = this.songNameHandler.bind(this);
 		this.handleFormSubmit = this.handleFormSubmit.bind(this);
 		this.handleFormClear = this.handleFormClear.bind(this);
+		this.insertSong = this.insertSong.bind(this);
+
+		this.songs = { ...JSON.parse(localStorage.getItem('songs')) } || { songList: [] };
 		this.state = {
 			songName: '',
 		};
@@ -25,33 +27,35 @@ class FormContainer extends React.Component {
 		// Prevents page redirect on submit.
 		event.preventDefault();
 		// Creates a new object based on state (i.e. snapshot).
-		const songData = Object.assign({}, this.state);
 		// Generates new UUID to index the song. (src: https://stackoverflow.com/a/14869745)
 		const uuid = crypto.randomBytes(20).toString('hex');
+		const songData = Object.assign({ id: uuid }, this.state);
 		// Inserts song into database.
-		songs[uuid] = songData;
-		console.table(songs);
+		this.songs.songList.push(songData);
+		this.insertSong(JSON.stringify(this.songs));
 		// Resets form.
 		this.handleFormClear(event);
+		window.location.reload();
 	}
 
 	handleFormClear(event) {
 		this.setState({ songName: '' });
 	}
 
+	insertSong(data) {
+		localStorage.setItem('songs', data);
+	}
+
 	render() {
 		return (
-			<form
-				className="form-container"
-				onSubmit={this.handleFormSubmit}
-				id="main-form">
+			<form className="form-container" onSubmit={this.handleFormSubmit} id="main-form">
 				<h2>{this.props.headingText}</h2>
 				<div>
 					<span>{this.state.songName}</span>
 					<Input
 						name={'song-name'}
 						inputType={'text'}
-						value={this.state.songInfo}
+						value={this.state.songName}
 						placeholder={"What's the song called?"}
 						changeHandler={this.songNameHandler}
 					/>
